@@ -38,7 +38,8 @@ class ApplicationController < Sinatra::Base
   patch '/posts/:id' do
 
     @post = Post.find(params[:id])
-    @post.update(name: params[:name], content: params[:content])
+
+    @post.update(parse_hash(params))
 
     redirect "/posts/#{@post.id}"
   end
@@ -49,4 +50,10 @@ class ApplicationController < Sinatra::Base
     erb :delete
   end
 
+  private
+  def parse_hash(hash)
+    hash.select do |k, v|
+      k == "name" || k == "content"
+    end
+  end
 end
